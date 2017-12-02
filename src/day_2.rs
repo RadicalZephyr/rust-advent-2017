@@ -26,18 +26,23 @@ named!(parse_row<Vec<u32>>,
        separated_nonempty_list!(delim, number)
 );
 
-pub fn solve(puzzle: &str) -> u32 {
+fn iter_table<F: Fn(Vec<u32>) -> u32>(puzzle: &str, f: F) -> u32 {
     let mut sum = 0;
 
     for line in puzzle.trim().split('\n') {
         match parse_row(line.as_bytes()) {
-            IResult::Done(_, row) => sum += row_difference(row) as u32,
+            IResult::Done(_, row) => sum += f(row),
             IResult::Incomplete(content) => panic!(format!("{:?}", content)),
             IResult::Error(e) => panic!(format!("{}", e)),
         }
     }
 
     sum
+
+}
+
+pub fn solve(puzzle: &str) -> u32 {
+    iter_table(puzzle, row_difference)
 }
 
 pub fn solve2(puzzle: &str) -> u32 {
