@@ -10,7 +10,7 @@ fn value_of(current: &u8, last: &u8) -> u32 {
     }
 }
 
-pub fn run(puzzle: &str) -> u32 {
+pub fn solve(puzzle: &str) -> u32 {
     let bytes = puzzle.as_bytes();
     let mut sum = 0;
     let mut last = &0;
@@ -30,11 +30,21 @@ mod test {
 
     #[test]
     fn test_one() {
-        assert_eq!(3, run("1122"));
+        assert_eq!(3, solve("1122"));
     }
 
     #[test]
     fn test_two() {
-        assert_eq!(4, run("1111"));
+        assert_eq!(4, solve("1111"));
+    }
+
+    #[test]
+    fn test_three() {
+        assert_eq!(0, solve("1234"));
+    }
+
+    #[test]
+    fn test_four() {
+        assert_eq!(9, solve("91212129"));
     }
 }
