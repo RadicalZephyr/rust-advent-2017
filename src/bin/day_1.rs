@@ -10,5 +10,6 @@ pub fn main() {
     let mut s = String::new();
     f.read_to_string(&mut s).expect("Couldn't read file into string");
 
-    println!("Solution: {}", day_1::solve(s.trim()));
+    println!("Part 1: {}", day_1::solve(s.trim()));
+    println!("Part 2: {}", day_1::solve2(s.trim()));
 }

@@ -26,14 +26,12 @@ pub fn solve(puzzle: &str) -> u32 {
 
 pub fn solve2(puzzle: &str) -> u32 {
     let bytes = puzzle.as_bytes();
-    let offset = puzzle.len() / 2;
+    let length = bytes.len();
+    let offset = length / 2;
     let mut sum = 0;
 
-    for index in 0..offset {
-        sum += value_of(&bytes[index], &bytes[index+offset]);
-    }
-    for index in offset..offset+offset {
-        sum += value_of(&bytes[index], &bytes[index-offset]);
+    for index in 0..length {
+        sum += value_of(&bytes[index], &bytes[(index+offset) % length]);
     }
 
     sum
