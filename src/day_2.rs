@@ -27,7 +27,14 @@ named!(parse_row<Vec<u8>>,
 );
 
 pub fn solve(puzzle: &str) -> u32 {
-    0
+    let mut sum = 0;
+
+    for line in puzzle.trim().split('\n') {
+        let (rest, row) = parse_row(line.as_bytes()).unwrap();
+        sum += row_difference(row) as u32;
+    }
+
+    sum
 }
 
 pub fn solve2(puzzle: &str) -> u32 {
@@ -58,5 +65,10 @@ mod test {
     #[test]
     fn test_parse_row2() {
         assert_eq!(IResult::Done(&b""[..], vec![1, 5, 5, 9]), parse_row("1\t5\t5\t9".as_bytes()));
+    }
+
+    #[test]
+    fn test_the_whole_enchilada() {
+        assert_eq!(18, solve("5\t1\t9\t5\n7\t5\t3\n2\t4\t6\t8\n"));
     }
 }
