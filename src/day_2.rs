@@ -1,16 +1,16 @@
 use std::str;
 use std::str::FromStr;
 
-use nom::digit;
+use nom::{digit, IResult};
 
-fn row_difference(row: Vec<u8>) -> u8 {
+fn row_difference(row: Vec<u32>) -> u32 {
     assert!(row.len() > 0);
     let max = row.iter().max().unwrap();
     let min = row.iter().min().unwrap();
     max - min
 }
 
-named!(number<u8>,
+named!(number<u32>,
        map_res!(
            map_res!(
                digit,
@@ -20,9 +20,9 @@ named!(number<u8>,
        )
 );
 
-named!(delim, eat_separator!(&b"\t"[..]));
+named!(delim, eat_separator!(&[9][..]));
 
-named!(parse_row<Vec<u8>>,
+named!(parse_row<Vec<u32>>,
        separated_nonempty_list!(delim, number)
 );
 
@@ -30,8 +30,11 @@ pub fn solve(puzzle: &str) -> u32 {
     let mut sum = 0;
 
     for line in puzzle.trim().split('\n') {
-        let (rest, row) = parse_row(line.as_bytes()).unwrap();
-        sum += row_difference(row) as u32;
+        match parse_row(line.as_bytes()) {
+            IResult::Done(_, row) => sum += row_difference(row) as u32,
+            IResult::Incomplete(content) => panic!(format!("{:?}", content)),
+            IResult::Error(e) => panic!(format!("{}", e)),
+        }
     }
 
     sum
@@ -65,6 +68,13 @@ mod test {
     #[test]
     fn test_parse_row2() {
         assert_eq!(IResult::Done(&b""[..], vec![1, 5, 5, 9]), parse_row("1\t5\t5\t9".as_bytes()));
+    }
+
+    #[test]
+    fn test_parse_row3() {
+        let line = "626	2424	2593	139	2136	163	1689	367	2235	125	2365	924	135	2583	1425	2502";
+        assert_eq!(IResult::Done(&b""[..], vec![626, 2424, 2593, 139, 2136, 163, 1689, 367, 2235, 125, 2365, 924, 135, 2583, 1425, 2502]),
+parse_row(line.as_bytes()));
     }
 
     #[test]
