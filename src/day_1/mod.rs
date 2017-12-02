@@ -24,6 +24,21 @@ pub fn solve(puzzle: &str) -> u32 {
     sum
 }
 
+pub fn solve2(puzzle: &str) -> u32 {
+    let bytes = puzzle.as_bytes();
+    let offset = puzzle.len() / 2;
+    let mut sum = 0;
+
+    for index in 0..offset {
+        sum += value_of(&bytes[index], &bytes[index+offset]);
+    }
+    for index in offset..offset+offset {
+        sum += value_of(&bytes[index], &bytes[index-offset]);
+    }
+
+    sum
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -46,5 +61,30 @@ mod test {
     #[test]
     fn test_four() {
         assert_eq!(9, solve("91212129"));
+    }
+
+    #[test]
+    fn test_five() {
+        assert_eq!(6, solve2("1212"));
+    }
+
+    #[test]
+    fn test_six() {
+        assert_eq!(0, solve2("1221"));
+    }
+
+    #[test]
+    fn test_seven() {
+        assert_eq!(4, solve2("123425"));
+    }
+
+    #[test]
+    fn test_eight() {
+        assert_eq!(12, solve2("123123"));
+    }
+
+    #[test]
+    fn test_nine() {
+        assert_eq!(4, solve2("12131415"));
     }
 }
