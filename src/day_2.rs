@@ -1,4 +1,4 @@
-use std::str;
+use std::{cmp, ptr, str, u32};
 use std::str::FromStr;
 
 use nom::{digit, IResult};
@@ -8,6 +8,28 @@ fn row_difference(row: Vec<u32>) -> u32 {
     let max = row.iter().max().unwrap();
     let min = row.iter().min().unwrap();
     max - min
+}
+
+fn row_divisible(row: Vec<u32>) -> u32 {
+    assert!(row.len() > 0);
+
+    for i in row.iter() {
+        for j in row.iter() {
+            if ptr::eq(i, j) {
+                continue;
+            }
+
+            let larger = cmp::max(i, j);
+            let smaller = cmp::min(i, j);
+
+            match u32::checked_div(*larger, *smaller) {
+                Some(res) => return res,
+                None => continue,
+            }
+        }
+    }
+
+    0
 }
 
 named!(number<u32>,
@@ -46,7 +68,7 @@ pub fn solve(puzzle: &str) -> u32 {
 }
 
 pub fn solve2(puzzle: &str) -> u32 {
-    0
+    iter_table(puzzle, row_divisible)
 }
 
 #[cfg(test)]
@@ -85,5 +107,10 @@ parse_row(line.as_bytes()));
     #[test]
     fn test_the_whole_enchilada() {
         assert_eq!(18, solve("5\t1\t9\t5\n7\t5\t3\n2\t4\t6\t8\n"));
+    }
+
+    #[test]
+    fn the_second_enchilada() {
+        assert_eq!(9, solve2("5\t1\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5\n"));
     }
 }
