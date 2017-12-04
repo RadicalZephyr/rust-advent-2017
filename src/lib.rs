@@ -1,10 +1,6 @@
 #[macro_use]
 extern crate nom;
 
-pub mod day_1;
-pub mod day_2;
-pub mod day_3;
-
 #[macro_export]
 macro_rules! advent {
     ($name:ident, $mod:ident) => {
@@ -23,3 +19,6 @@ macro_rules! advent {
         }
     }
 }
+
+pub mod day_1;
+pub mod day_2;
