@@ -1,4 +1,4 @@
-use std::{cmp, ptr, str, u32};
+use std::{cmp, str, u32};
 use std::str::FromStr;
 
 use nom::{digit, IResult};
@@ -15,20 +15,18 @@ fn row_divisible(row: Vec<u32>) -> u32 {
 
     for i in row.iter() {
         for j in row.iter() {
-            if ptr::eq(i, j) {
-                continue;
-            }
-
             let larger = cmp::max(i, j);
             let smaller = cmp::min(i, j);
 
-            match u32::checked_div(*larger, *smaller) {
-                Some(res) => return res,
-                None => continue,
+            if i == j || *smaller == 1 { // Ignore division by one
+                continue;
+            }
+
+            if (larger % smaller) == 0 {
+                return larger / smaller;
             }
         }
     }
-
     0
 }
 
@@ -112,5 +110,10 @@ parse_row(line.as_bytes()));
     #[test]
     fn the_second_enchilada() {
         assert_eq!(9, solve2("5\t1\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5\n"));
+    }
+
+    #[test]
+    fn the_second_enchilada_with_real_tabs() {
+        assert_eq!(9, solve2("5	1	9	2	8\n9	4	7	3\n3	8	6	5\n"));
     }
 }
