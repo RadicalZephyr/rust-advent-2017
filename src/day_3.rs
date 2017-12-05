@@ -41,14 +41,10 @@ impl Kind {
             },
             Kind::Odd(k)  => {
                 let side_length = (2*k)+1;
-                println!("Side length: {}", side_length);
                 let offset = offset - 1; // this one is going from k -> k+1 on X
-                println!("O: {}, K: {}", offset, k);
                 if offset <= side_length {
-                    println!("first side");
                     (k+1, -k+offset)
                 } else {
-                    println!("second side");
                     let offset = offset - side_length;
                     (k+1-offset, k+1)
                 }
@@ -66,10 +62,7 @@ fn coordinates_of(index: u32) -> (i32, i32) {
     let root_kind = Kind::new(root);
 
     let offset = index - (root*root);
-    println!("Root: {}", root);
-    println!("Offset: {}", offset);
     let coords = root_kind.coordinates_of(offset);
-    println!("Coords: {:?}", coords);
     coords
 }
 
