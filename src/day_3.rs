@@ -23,6 +23,7 @@ struct State {
     y: i32,
     side_index: u64,
     side_length: u64,
+    turn_count: u8,
     direction: Direction,
 }
 
@@ -33,6 +34,7 @@ impl State {
             y: 0,
             side_index: 0,
             side_length: 1,
+            turn_count: 0,
             direction: Direction::Right,
         }
     }
@@ -49,6 +51,16 @@ impl State {
             Down  => self.y -= 1,
         }
     }
+
+    fn turn(&mut self) {
+        self.direction.turn();
+        self.turn_count += 1;
+
+        if self.turn_count >= 2 {
+            self.turn_count = 0;
+            self.side_length += 1;
+        }
+    }
 }
 
 impl Iterator for State {
@@ -61,7 +73,7 @@ impl Iterator for State {
 
         if self.side_index >= self.side_length {
             self.side_index = 0;
-            self.direction.turn();
+            self.turn();
         }
 
         Some(result)
@@ -198,55 +210,55 @@ mod test {
         assert_eq!(1, solve("4"));
     }
 
-    // #[test]
-    // fn test_five() {
-    //     assert_eq!(2, solve("5"));
-    // }
+    #[test]
+    fn test_five() {
+        assert_eq!(2, solve("5"));
+    }
 
-    // #[test]
-    // fn test_six() {
-    //     assert_eq!(1, solve("6"));
-    // }
+    #[test]
+    fn test_six() {
+        assert_eq!(1, solve("6"));
+    }
 
-    // #[test]
-    // fn test_seven() {
-    //     assert_eq!(2, solve("7"));
-    // }
+    #[test]
+    fn test_seven() {
+        assert_eq!(2, solve("7"));
+    }
 
-    // #[test]
-    // fn test_eight() {
-    //     assert_eq!(1, solve("8"));
-    // }
+    #[test]
+    fn test_eight() {
+        assert_eq!(1, solve("8"));
+    }
 
-    // #[test]
-    // fn test_ten() {
-    //     assert_eq!(3, solve("10"));
-    // }
+    #[test]
+    fn test_ten() {
+        assert_eq!(3, solve("10"));
+    }
 
-    // #[test]
-    // fn test_eleven() {
-    //     assert_eq!(2, solve("11"));
-    // }
+    #[test]
+    fn test_eleven() {
+        assert_eq!(2, solve("11"));
+    }
 
-    // #[test]
-    // fn test_twelve() {
-    //     assert_eq!(3, solve("12"));
-    // }
+    #[test]
+    fn test_twelve() {
+        assert_eq!(3, solve("12"));
+    }
 
-    // #[test]
-    // fn test_fourteen() {
-    //     assert_eq!(3, solve("14"));
-    // }
+    #[test]
+    fn test_fourteen() {
+        assert_eq!(3, solve("14"));
+    }
 
-    // #[test]
-    // fn test_fifteen() {
-    //     assert_eq!(2, solve("15"));
-    // }
+    #[test]
+    fn test_fifteen() {
+        assert_eq!(2, solve("15"));
+    }
 
-    // #[test]
-    // fn test_fifty_nine() {
-    //     assert_eq!(6, solve("59"));
-    // }
+    #[test]
+    fn test_fifty_nine() {
+        assert_eq!(6, solve("59"));
+    }
 
     // use criterion::Criterion;
 
