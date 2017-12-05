@@ -16,11 +16,12 @@ impl Kind {
 
     fn coordinates(&self) -> (i32, i32) {
         match *self {
-            Kind::Even(k) => (1-k,  k),
-            Kind::Odd(k)  => (  k, -k),
+            Kind::Even(k) => (-k+1,  k),
+            Kind::Odd(k)  => ( k  , -k),
         }
     }
 
+    #[allow(unused_variables)]
     fn coordinates_of(&self, offset: u32) -> (i32, i32) {
         if offset == 0 {
             return self.coordinates();
@@ -28,15 +29,16 @@ impl Kind {
 
         let offset = offset as i32;
         match *self {
-            Kind::Even(k) => if offset < 2*k {
-                (k+1, -k + offset)
-            } else {
-                ((2-k) + offset - 2*k , k+1)
+            Kind::Even(k) => {
+                let side_length = 2*k;
+                if offset <= side_length {
+                    (-k,(k+1)-offset)
+                } else {
+                    ((-k-1)+(offset-side_length), -k)
+                }
             },
-            Kind::Odd(k)  => if offset < (2*k) {
-                ( k, k - offset)
-            } else {
-                ( k + offset - (2*k), -k)
+            Kind::Odd(k)  => {
+                (k+1,-k-1+offset)
             },
         }
     }
@@ -53,7 +55,9 @@ fn coordinates_of(index: u32) -> (i32, i32) {
     let offset = index - (root*root);
     println!("Root: {}", root);
     println!("Offset: {}", offset);
-    root_kind.coordinates_of(offset)
+    let coords = root_kind.coordinates_of(offset);
+    println!("Coords: {:?}", coords);
+    coords
 }
 
 pub fn solve(puzzle: &str) -> u32 {
@@ -105,7 +109,42 @@ mod test {
     }
 
     #[test]
+    fn test_five() {
+        assert_eq!(2, solve("5"));
+    }
+
+    #[test]
+    fn test_six() {
+        assert_eq!(1, solve("6"));
+    }
+
+    #[test]
+    fn test_seven() {
+        assert_eq!(2, solve("7"));
+    }
+
+    #[test]
+    fn test_eight() {
+        assert_eq!(1, solve("8"));
+    }
+
+    #[test]
+    fn test_ten() {
+        assert_eq!(3, solve("10"));
+    }
+
+    #[test]
+    fn test_eleven() {
+        assert_eq!(2, solve("11"));
+    }
+
+    #[test]
     fn test_twelve() {
         assert_eq!(3, solve("12"));
     }
+
+    // #[test]
+    // fn test_fifty_nine() {
+    //     assert_eq!(6, solve("59"));
+    // }
 }
