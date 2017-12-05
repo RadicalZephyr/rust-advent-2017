@@ -35,13 +35,23 @@ impl Kind {
                 if offset < side_length {
                     (-k,k-offset)
                 } else {
-                    (-k+(offset-side_length), -k)
+                    let offset = offset - side_length;
+                    (-k+offset, -k)
                 }
             },
             Kind::Odd(k)  => {
-                let side_length = 2*k;
+                let side_length = (2*k)+1;
+                println!("Side length: {}", side_length);
                 let offset = offset - 1; // this one is going from k -> k+1 on X
-                (k+1,-k+offset)
+                println!("O: {}, K: {}", offset, k);
+                if offset <= side_length {
+                    println!("first side");
+                    (k+1, -k+offset)
+                } else {
+                    println!("second side");
+                    let offset = offset - side_length;
+                    (k+1-offset, k+1)
+                }
             },
         }
     }
@@ -144,6 +154,11 @@ mod test {
     #[test]
     fn test_twelve() {
         assert_eq!(3, solve("12"));
+    }
+
+    #[test]
+    fn test_fourteen() {
+        assert_eq!(3, solve("14"));
     }
 
     // #[test]
