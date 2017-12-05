@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate nom;
+#[cfg(test)]
+extern crate criterion;
 
 #[macro_export]
 macro_rules! advent {

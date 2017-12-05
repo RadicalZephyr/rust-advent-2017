@@ -1,3 +1,7 @@
+fn count_squares(index: u32) -> (i32, i32) {
+    (0,0)
+}
+
 enum Kind {
     Even(i32),
     Odd(i32),
@@ -162,5 +166,13 @@ mod test {
     #[test]
     fn test_fifty_nine() {
         assert_eq!(6, solve("59"));
+    }
+
+    use criterion::Criterion;
+
+    #[test]
+    fn criterion_benchmark() {
+        Criterion::default()
+            .bench_function("direct solve 100000",|b| b.iter(|| solve("100000")));
     }
 }
