@@ -7,20 +7,21 @@ enum Direction {
 }
 
 impl Direction {
-    fn turn(&self) -> Direction {
+    fn turn(&mut self) {
         use self::Direction::*;
-        match *self {
+        *self = match *self {
             Right => Up,
-            Up => Left,
-            Left => Down,
-            Down => Right,
-        }
+            Up    => Left,
+            Left  => Down,
+            Down  => Right,
+        };
     }
 }
 
 struct State {
     x: i32,
     y: i32,
+    side_index: u64,
     side_length: u64,
     direction: Direction,
 }
@@ -30,8 +31,22 @@ impl State {
         State {
             x: 0,
             y: 0,
+            side_index: 0,
             side_length: 1,
             direction: Direction::Right,
+        }
+    }
+
+    fn step(&mut self) {
+        use self::Direction::*;
+
+        self.side_index += 1;
+
+        match self.direction {
+            Right => self.x += 1,
+            Up    => self.y += 1,
+            Left  => self.x -= 1,
+            Down  => self.y -= 1,
         }
     }
 }
@@ -41,14 +56,25 @@ impl Iterator for State {
 
     fn next(&mut self) -> Option<(i32, i32)> {
         let result = (self.x, self.y);
-        self.x += 1;
+
+        self.step();
+
+        if self.side_index >= self.side_length {
+            self.side_index = 0;
+            self.direction.turn();
+        }
+
         Some(result)
     }
 }
 
-fn count_squares(mut index: usize) -> (i32, i32) {
-    let state = State::new();
-    state.skip(index - 1).next().unwrap()
+fn count_squares(index: usize) -> (i32, i32) {
+    let mut state = State::new();
+    for _i in 1..index {
+        println!("{:?}", state.next());
+    }
+
+    state.next().unwrap()
 }
 
 enum Kind {
@@ -167,10 +193,10 @@ mod test {
         assert_eq!(2, solve("3"));
     }
 
-    // #[test]
-    // fn test_four() {
-    //     assert_eq!(1, solve("4"));
-    // }
+    #[test]
+    fn test_four() {
+        assert_eq!(1, solve("4"));
+    }
 
     // #[test]
     // fn test_five() {
