@@ -83,7 +83,7 @@ impl Iterator for State {
 fn count_squares(index: usize) -> (i32, i32) {
     let mut state = State::new();
     for _i in 1..index {
-        println!("{:?}", state.next());
+        state.next();
     }
 
     state.next().unwrap()
@@ -260,11 +260,11 @@ mod test {
         assert_eq!(6, solve("59"));
     }
 
-    // use criterion::Criterion;
+    use criterion::Criterion;
 
-    // #[test]
-    // fn criterion_benchmark() {
-    //     Criterion::default()
-    //         .bench_function("direct solve 100000",|b| b.iter(|| solve("100000")));
-    // }
+    #[test]
+    fn criterion_benchmark() {
+        Criterion::default()
+            .bench_function("direct solve 100000",|b| b.iter(|| solve("100000")));
+    }
 }
