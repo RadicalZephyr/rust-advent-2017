@@ -161,8 +161,13 @@ mod test {
         assert_eq!(3, solve("14"));
     }
 
-    // #[test]
-    // fn test_fifty_nine() {
-    //     assert_eq!(6, solve("59"));
-    // }
+    #[test]
+    fn test_fifteen() {
+        assert_eq!(2, solve("15"));
+    }
+
+    #[test]
+    fn test_fifty_nine() {
+        assert_eq!(6, solve("59"));
+    }
 }
