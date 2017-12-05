@@ -31,14 +31,17 @@ impl Kind {
         match *self {
             Kind::Even(k) => {
                 let side_length = 2*k;
-                if offset <= side_length {
-                    (-k,(k+1)-offset)
+                let offset = offset - 1; // this one is going from -k+1 -> -k on X
+                if offset < side_length {
+                    (-k,k-offset)
                 } else {
-                    ((-k-1)+(offset-side_length), -k)
+                    (-k+(offset-side_length), -k)
                 }
             },
             Kind::Odd(k)  => {
-                (k+1,-k-1+offset)
+                let side_length = 2*k;
+                let offset = offset - 1; // this one is going from k -> k+1 on X
+                (k+1,-k+offset)
             },
         }
     }
