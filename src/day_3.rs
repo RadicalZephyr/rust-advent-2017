@@ -144,7 +144,7 @@ impl Kind {
     }
 }
 
-fn coordinates_of(index: u32) -> (i32, i32) {
+fn coordinates_of(index: usize) -> (i32, i32) {
     if index == 1 {
         return (0, 0);
     }
@@ -152,13 +152,14 @@ fn coordinates_of(index: u32) -> (i32, i32) {
     let root = (index as f32).sqrt().floor() as u32;
     let root_kind = Kind::new(root);
 
-    let offset = index - (root*root);
+    let offset = index as u32 - (root*root);
     let coords = root_kind.coordinates_of(offset);
     coords
 }
 
 pub fn solve(puzzle: &str) -> u32 {
     let mem_index: usize = puzzle.parse().expect("Puzzle input must be a number.");
+    // let (x, y) = coordinates_of(mem_index);
     let (x, y) = count_squares(mem_index);
     (x.abs() + y.abs()) as u32
 }
