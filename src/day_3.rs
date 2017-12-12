@@ -1,6 +1,8 @@
 // header
 #![allow(dead_code)]
 
+use std::collections::HashMap;
+
 enum Direction {
     Up, Down,
     Left, Right,
@@ -78,6 +80,20 @@ impl Iterator for State {
 
         Some(result)
     }
+}
+
+fn neighbors(coord: (i32, i32)) -> Vec<(i32, i32)> {
+    let mut result = vec![];
+    let (x, y) = coord;
+    for ix in (x-1)..(x+2) {
+        for iy in  (y-1)..(y+2) {
+            if ix == x && iy == y {
+                continue;
+            }
+            result.push((ix, iy));
+        }
+    }
+    result
 }
 
 fn count_squares(index: usize) -> (i32, i32) {
@@ -164,7 +180,24 @@ pub fn solve(puzzle: &str) -> u32 {
     (x.abs() + y.abs()) as u32
 }
 
-pub fn solve2(_puzzle: &str) -> u32 {
+pub fn solve2(puzzle: &str) -> u32 {
+    let threshold: u32 = puzzle.parse().expect("Puzzle input must be a number.");
+    let mut state = State::new();
+    let mut storage = HashMap::new();
+
+    // Prime the storage
+    storage.insert((0,0), 1);
+    state.next();
+
+    for coord in state {
+        let total = neighbors(coord).into_iter().map(|coord| storage.get(&coord).unwrap_or(&0)).sum();
+        if total > threshold {
+            return total;
+        }
+
+        storage.insert(coord, total);
+    }
+
     0
 }
 
@@ -189,6 +222,12 @@ mod test {
         assert_eq!(( 2, -2), coordinates_of(25));
         assert_eq!((-2,  3), coordinates_of(36));
         assert_eq!(( 3, -3), coordinates_of(49));
+    }
+
+    #[test]
+    fn test_neighbors() {
+        let expected = vec![(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)];
+        assert_eq!(expected, neighbors((0, 0)));
     }
 
     #[test]
@@ -259,6 +298,16 @@ mod test {
     #[test]
     fn test_fifty_nine() {
         assert_eq!(6, solve("59"));
+    }
+
+    #[test]
+    fn test_second_nine() {
+        assert_eq!(10, solve2("9"));
+    }
+
+    #[test]
+    fn test_second_twelve() {
+        assert_eq!(23, solve2("12"));
     }
 
     use criterion::Criterion;
