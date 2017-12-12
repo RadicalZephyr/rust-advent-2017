@@ -50,6 +50,11 @@ impl State {
             Left  => self.x -= 1,
             Down  => self.y -= 1,
         }
+
+        if self.side_index >= self.side_length {
+            self.side_index = 0;
+            self.turn();
+        }
     }
 
     fn turn(&mut self) {
@@ -70,11 +75,6 @@ impl Iterator for State {
         let result = (self.x, self.y);
 
         self.step();
-
-        if self.side_index >= self.side_length {
-            self.side_index = 0;
-            self.turn();
-        }
 
         Some(result)
     }
