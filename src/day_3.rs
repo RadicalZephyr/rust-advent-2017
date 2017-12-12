@@ -159,8 +159,8 @@ fn coordinates_of(index: usize) -> (i32, i32) {
 
 pub fn solve(puzzle: &str) -> u32 {
     let mem_index: usize = puzzle.parse().expect("Puzzle input must be a number.");
-    // let (x, y) = coordinates_of(mem_index);
-    let (x, y) = count_squares(mem_index);
+    let (x, y) = coordinates_of(mem_index);
+    // let (x, y) = count_squares(mem_index);
     (x.abs() + y.abs()) as u32
 }
 
@@ -263,7 +263,7 @@ mod test {
 
     use criterion::Criterion;
 
-    #[test]
+    // #[test]
     fn criterion_benchmark() {
         Criterion::default()
             .bench_function("direct solve 100000",|b| b.iter(|| solve("100000")));
